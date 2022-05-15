@@ -1,3 +1,2 @@
-module github.com/billnice250/MyC_libray/GO
-
+module billnice.it/libary
 go 1.18

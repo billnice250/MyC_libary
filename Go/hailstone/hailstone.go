@@ -1,10 +1,14 @@
 /*
 this a program that prints the hailstone sequence for a given number
 */
-package util
+package hailstone
 
-func Hailstone(n int) []int {
-	var sequence []int
+func Generate(n int64) []int64 {
+	var sequence []int64
+	if n == 1 {
+		sequence = append(sequence, n)
+		return sequence
+	}
 	for n != 1 {
 		sequence = append(sequence, n)
 		if n%2 == 0 {
@@ -13,5 +17,6 @@ func Hailstone(n int) []int {
 			n = 3*n + 1
 		}
 	}
+
 	return sequence
 }
