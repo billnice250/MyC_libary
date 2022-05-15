@@ -1,4 +1,4 @@
-# MyC_libary
+# My_libary
 
 
 My personal library for useful algorithms
