@@ -1,0 +1,3 @@
+/home/billnice/osEx01/copying_file/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/billnice/osEx01/copying_file/cmake-build-debug/CMakeFiles/copying_file.dir
+/home/billnice/osEx01/copying_file/cmake-build-debug/CMakeFiles/edit_cache.dir
