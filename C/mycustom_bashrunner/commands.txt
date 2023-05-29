@@ -1,0 +1,5 @@
+touch mioFile.bin end
+ls -laR end
+cat mioFile.bin end
+mkdir -p tmpDir end
+cp -f mioFile.bin tmpDir end
