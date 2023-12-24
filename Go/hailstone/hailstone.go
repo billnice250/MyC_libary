@@ -1,7 +1,7 @@
 /*
 this a program that prints the hailstone sequence for a given number
 */
-package hailstone
+package main
 
 func Generate(n int64) []int64 {
 	var sequence []int64

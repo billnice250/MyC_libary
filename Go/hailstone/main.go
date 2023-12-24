@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-
-	"billnice.it/libary/hailstone" // import the util package
 )
 
 var verboseON bool
@@ -78,7 +76,7 @@ func main() {
 
 func findSequence(n int64, running chan int64) {
 
-	output := hailstone.Generate(n)
+	output := Generate(n)
 	if verboseON {
 		fmt.Println("The sequence for #", n, "has (", len(output), " elements):\n", output)
 	} else {

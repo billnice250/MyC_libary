@@ -1,2 +1,3 @@
-module billnice.it/libary
-go 1.18
+module billnice_go_library
+
+go 1.20
