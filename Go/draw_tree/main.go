@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	var n int = 20
+	var n int = 10
 	var leg_height int = n / 2
 	var leg rune = '🎃'
 	var leaf rune = '🌱'
