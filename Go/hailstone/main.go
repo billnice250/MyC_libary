@@ -4,7 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 	"strconv"
+	"sync"
+	"time"
 )
 
 var verboseON bool
@@ -35,7 +38,7 @@ func main() {
 
 	s := flag.Arg(0)
 	// string to int
-	tmp, err := strconv.Atoi(s)
+	tmp, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
 		if string(s) != "" {
 			fmt.Println("Error the number provided wasn't accepted:", err)
@@ -45,48 +48,49 @@ func main() {
 
 	Max := int64(tmp)
 
-	running := make(chan int64, Max)
-	var i int64
+	now := time.Now()
+	numThreads := runtime.NumCPU()
+	bufferSize := numThreads * 2
+	running := make(chan int64, bufferSize)
+	fmt.Printf("Created a buffered channel with capacity: %d\n", bufferSize)
+
+	var wg sync.WaitGroup
 
 	if allseq {
 		fmt.Println("I will print the sequence for the first", Max, "numbers")
-
-		for i = 0; i <= int64(Max); i++ {
-			go findSequence(i, running)
+		for i := int64(0); i <= Max; i++ {
+			wg.Add(1)
+			go findSequence(i, running, &wg)
 		}
-
 	} else {
 		fmt.Println("I will print the sequence for", Max, "only")
-
-		go findSequence(Max, running)
+		wg.Add(1)
+		go findSequence(Max, running, &wg)
 	}
+
+	go func() {
+		wg.Wait()
+		close(running)
+	}()
 
 	received := int64(0)
 	for range running {
 		received++
 		if received >= Max {
 			break
-
 		}
-
 	}
-	println("Received", received, "values")
-
+	println("Received", received, "values and done in", time.Since(now).Milliseconds(), "ms")
 }
 
-func findSequence(n int64, running chan int64) {
+func findSequence(n int64, running chan int64, wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	output := Generate(n)
 	if verboseON {
 		fmt.Println("The sequence for #", n, "has (", len(output), " elements):\n", output)
 	} else {
 		fmt.Println("The sequence for #", n, "has (", len(output), " elements).")
-
 	}
 	running <- n
-
-	if !allseq {
-		close(running)
-	}
-
 }
