@@ -50,7 +50,13 @@ func main() {
 
 	now := time.Now()
 	numThreads := runtime.NumCPU()
-	bufferSize := numThreads * 100
+	var factor int
+	if Max < 100 {
+		factor = int(Max)
+	} else {
+		factor = 100
+	}
+	bufferSize := numThreads * factor
 	running := make(chan int64, bufferSize)
 	fmt.Printf("Created a buffered channel with capacity: %d\n", bufferSize)
 
