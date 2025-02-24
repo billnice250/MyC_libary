@@ -13,6 +13,7 @@ var (
 	quick         bool
 	merge         bool
 	sleep         bool
+	nice          bool
 	all           bool
 	help          bool
 	file          string
@@ -31,10 +32,12 @@ type AlgoOutput struct {
 }
 
 func main() {
+
 	// read the flags
 	// if -quick then run quicksort
 	// if -merge then run mergesort
 	// if -sleep then run sleepsort
+	// if -nice then run stalin nice sort
 	// if -all then run all
 	// if -help then print help
 	// if no flags then print help
@@ -50,6 +53,7 @@ func main() {
 	flag.BoolVar(&quick, "quick", false, "run quicksort")
 	flag.BoolVar(&merge, "merge", false, "run mergesort")
 	flag.BoolVar(&sleep, "sleep", false, "run sleepsort")
+	flag.BoolVar(&nice, "nice", false, "run stalin nice sort")
 	flag.BoolVar(&all, "all", false, "run all")
 	flag.BoolVar(&verbose, "verbose", false, "verbose output")
 	flag.StringVar(&file, "file", "", "read the file and sort the numbers in the specified file")
@@ -99,7 +103,7 @@ func main() {
 			wg.Done()
 		}()
 	}
-	if sleep || all {
+	if sleep {
 		wg.Add(1)
 		go func() {
 			start := time.Now()
@@ -108,6 +112,18 @@ func main() {
 			algorithms.SleepSort(&newNumbers)
 			duration := time.Since(start)
 			algoOutputs <- AlgoOutput{duration, "SleepSort", newNumbers}
+			wg.Done()
+		}()
+	}
+	if nice || all {
+		wg.Add(1)
+		go func() {
+			start := time.Now()
+			newNumbers := make([]int, len(numbers))
+			copy(newNumbers, numbers)
+			algorithms.StalinNiceSort(newNumbers)
+			duration := time.Since(start)
+			algoOutputs <- AlgoOutput{duration, "StalinNiceSort", newNumbers}
 			wg.Done()
 		}()
 	}
