@@ -4,8 +4,6 @@ import (
 	"container/heap"
 )
 
-type StalinNiceSort struct{}
-
 // IntHeap type to implement the heap.Interface for min-heap
 type IntHeap []int
 
@@ -38,34 +36,59 @@ func (h *IntHeap) Pop() interface{} {
 // See: https://en.wikipedia.org/wiki/In-place_algorithm
 // See: https://en.wikipedia.org/wiki/Sorting_algorithm
 // See: https://en.wikipedia.org/wiki/Time_complexity
-// StalinNiceSort - In-place optimized version
-func (s *StalinNiceSort) Sort(arr []int) {
+func StalinNiceSort(arr []int) {
 	if len(arr) == 0 {
 		return
 	}
 
 	// First element always stays
-	writeIdx := 1
+	kept := []int{arr[0]}
 	last := arr[0]
 	h := &IntHeap{}
 	heap.Init(h)
 
 	// Stalin sort filtering pass
-	for i := 1; i < len(arr); i++ {
-		if arr[i] >= last {
-			arr[writeIdx] = arr[i]
-			writeIdx++
-			last = arr[i]
+	for _, num := range arr[1:] {
+		if num >= last {
+			kept = append(kept, num)
+			last = num
 		} else {
-			heap.Push(h, arr[i]) // Push directly to heap
+			heap.Push(h, num)
 		}
 	}
 
-	// Pop heap elements directly into array (avoiding extra slice)
+	// Extract sorted elements from heap
+	sortedHeap := make([]int, 0, h.Len())
 	for h.Len() > 0 {
-		arr[writeIdx] = heap.Pop(h).(int)
-		writeIdx++
+		sortedHeap = append(sortedHeap, heap.Pop(h).(int))
 	}
+
+	// Merge the two sorted arrays
+	count := 0
+	i, j := 0, 0
+	for i < len(kept) && j < len(sortedHeap) {
+		if kept[i] < sortedHeap[j] {
+			arr[count] = kept[i]
+			i++
+		} else {
+			arr[count] = sortedHeap[j]
+			j++
+		}
+		count++
+	}
+
+	// Append remaining elements
+	for i < len(kept) {
+		arr[count] = kept[i]
+		i++
+		count++
+	}
+	for j < len(sortedHeap) {
+		arr[count] = sortedHeap[j]
+		j++
+		count++
+	}
+
 }
 
 func StalinNiceSortInPlace(arr []int) {
