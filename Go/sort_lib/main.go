@@ -78,7 +78,19 @@ func main() {
 
 	var algoOutputs chan AlgoOutput = make(chan AlgoOutput, 3)
 	wg := sync.WaitGroup{}
-
+	if nice || all {
+		wg.Add(1)
+		go func() {
+			start := time.Now()
+			newNumbers := make([]int, len(numbers))
+			copy(newNumbers, numbers)
+			StalinNiceSort := &algorithms.StalinNiceSort{}
+			StalinNiceSort.Sort(newNumbers)
+			duration := time.Since(start)
+			algoOutputs <- AlgoOutput{duration, "StalinNiceSort", newNumbers}
+			wg.Done()
+		}()
+	}
 	if quick || all {
 		wg.Add(1)
 		go func() {
@@ -115,18 +127,7 @@ func main() {
 			wg.Done()
 		}()
 	}
-	if nice || all {
-		wg.Add(1)
-		go func() {
-			start := time.Now()
-			newNumbers := make([]int, len(numbers))
-			copy(newNumbers, numbers)
-			algorithms.StalinNiceSort(newNumbers)
-			duration := time.Since(start)
-			algoOutputs <- AlgoOutput{duration, "StalinNiceSort", newNumbers}
-			wg.Done()
-		}()
-	}
+
 	if nice || all {
 		wg.Add(1)
 		go func() {
