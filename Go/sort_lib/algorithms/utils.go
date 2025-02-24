@@ -39,31 +39,3 @@ func mergeInPlace(numbers []int, low, middle, high int) {
 		k++
 	}
 }
-
-// Corrected merge function to merge two sorted arrays
-func merge(left, right []int) []int {
-	result := make([]int, 0, len(left)+len(right))
-	i, j := 0, 0
-
-	for i < len(left) && j < len(right) {
-		if left[i] <= right[j] {
-			result = append(result, left[i])
-			i++
-		} else {
-			result = append(result, right[j])
-			j++
-		}
-	}
-
-	// Append remaining elements
-	for i < len(left) {
-		result = append(result, left[i])
-		i++
-	}
-	for j < len(right) {
-		result = append(result, right[j])
-		j++
-	}
-
-	return result
-}

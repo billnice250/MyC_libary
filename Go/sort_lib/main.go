@@ -127,6 +127,18 @@ func main() {
 			wg.Done()
 		}()
 	}
+	if nice || all {
+		wg.Add(1)
+		go func() {
+			start := time.Now()
+			newNumbers := make([]int, len(numbers))
+			copy(newNumbers, numbers)
+			algorithms.StalinNiceSortInPlace(newNumbers)
+			duration := time.Since(start)
+			algoOutputs <- AlgoOutput{duration, "StalinNiceSortInPlace", newNumbers}
+			wg.Done()
+		}()
+	}
 	go func() {
 		wg.Wait()
 		close(algoOutputs)
